@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>lista de tarefas</title>
+  <link rel="stylesheet" href="main.css" />
+  <style>
+    .fade {
+      opacity: 0;
+      transition: opacity 2s;
+    }
+  </style>
+</head>
+
+<body>
+
+  <form action="/login" method="post">
+    <div class="container">
+      <label for="uname"><b>Nome de Usuário</b></label>
+      <input type="text" placeholder="Insira o nome de usuário" name="uname" required>
+  
+      <label for="psw"><b>Senha</b></label>
+      <input type="password" placeholder="Insira a senha" name="psw" required>
+  
+      <button type="submit">Login</button>
+    </div>
+  </form>
+  
+  <div>
+    <h1> aqui estão alguns exemplos de tarefas ou notas que você pode criar</h1>
+    <h1 class="tittle">tarefas do dia 1 de outubro</h1>
+    <ul id="lista">
+      <li class="list-item">estudar programação</li>
+      <li class="list-item">comprar ração pro cachorro</li>
+      <li class="list-item">revisar a playlist de javascript</li>
+    </ul>
+  </div>
+  <div>
+    <input id="inputItem" />
+    <button onclick="adicionarItem()">Adicionar</button>
+  </div>
+
+  <script>
+    function adicionarItem() {
+      var ul = document.getElementById("lista");
+      var item = document.getElementById("inputItem");
+      var li = document.createElement("li");
+      li.appendChild(document.createTextNode(item.value));
+      li.setAttribute("onclick", "removerItem(this)");
+      li.classList.add('fade');
+      ul.appendChild(li);
+      item.value = "";
+      setTimeout(function() { li.style.opacity = '1'; }, 50);
+      salvarLista();
+    }
+  
+    function removerItem(item) {
+      var ul = document.getElementById("lista");
+      ul.removeChild(item);
+      salvarLista();
+    }
+  
+    function salvarLista() {
+      var ul = document.getElementById("lista");
+      var itens = [];
+      for (var i = 0; i < ul.children.length; i++) {
+        itens.push(ul.children[i].innerText);
+      }
+      localStorage.setItem('itens', JSON.stringify(itens));
+    }
+  
+    function carregarLista() {
+      var itens = JSON.parse(localStorage.getItem('itens'));
+      if (itens) {
+        var ul = document.getElementById("lista");
+        for (var i = 0; i < itens.length; i++) {
+          var li = document.createElement("li");
+          li.appendChild(document.createTextNode(itens[i]));
+          li.setAttribute("onclick", "removerItem(this)");
+          li.classList.add('fade');
+          ul.appendChild(li);
+          setTimeout(function() { li.style.opacity = '1'; }, 50);
+        }
+      }
+    }
+  
+    carregarLista();
+  </script>
+
+</body>
+
+</html>
